@@ -1,10 +1,10 @@
 ---
-title: API Reference
+title: DNN API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - shell
-  - ruby
-  - python
+  - powershell
+  - csharp
+  - vb
   - javascript
 
 toc_footers:
@@ -19,221 +19,69 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the DNN Developer Documentation Site. DNN is a great platform for developing .NET web applications as 
+well as full support for modern Single Page Applications (SPA). Whether you build in ReactJS, VueJS, or vanilla JS, 
+you'll be able to build secure, robust applications.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+This documentation is intended to provide developers with all the information they need to get solutions running quickly. 
+At the same time, it provides an in-depth reference to the DNN API.
 
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
+# Concepts
+### Entities, Info Objects and Controllers
+When navigating the API, you'll find most of your work involves Controllers acting on Info objects. Info objects 
+typically describe individual items such as a User, Page (called a Tab in the API for historical reasons), Portal, etc.
+Many of these objects can be found in the `DotNetNuke.Entities` namespace.
 
-# Authentication
+### Plug-in Components
+Many aspects of DNN are capable of using drop-in replacements, enabling you to highly customize how certain aspects of 
+the site, like authentication, work. This is accomplished using the [Provider pattern](http://somelink.here)
 
-> To authorize, use this code:
 
-```ruby
-require 'kittn'
+# Users
+Users are central to development within DNN. The core object you'll be working with is the `UserInfo` object
+## Adding a User to a Portal
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
+## Getting a User
+
+## Listing Users
+
+## Deleting a User
+
+
+
+## UserInfo Class
+```csharp
+[SerializableAttribute]
+public class UserInfo : BaseEntityInfo, IPropertyAccess
 ```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
+```vb
+<SerializableAttribute>
+Public Class UserInfo
+	Inherits BaseEntityInfo
+	Implements IPropertyAccess
 ```
+The `UserInfo` class contains all the data that describes a user in the DNN system.
 
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+### Methods
+Name | Description 
+---- | -----------
+`ClearRoles` | Obsolete as of version 99.99.99
+`CloneBaseProperties` | (Inherited from BaseEntityInfo)
+`CreatedByUser` | Gets the UserInfo object associated with this User (Inherited from BaseEntityInfo)
+`IsInRole` | Determines if the user is in the passed-in role
+
+### IsInRole
+```csharp
+public bool IsInRole(
+	string role
+)
 ```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
+```vb
+Public Function IsInRole ( 
+	role As String
+) As Boolean
 ```
+Pass a [role name](https://somelink.com/#list-roles) into the function. It will return a Boolean (True/False) value indicating if the user 
+is in that role
 
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-# Kittens
-
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
-
-This endpoint retrieves all kittens.
-
-### HTTP Request
-
-`GET http://example.com/api/kittens`
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
-```
-
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
-
-## Delete a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
-```
-
-This endpoint deletes a specific kitten.
-
-### HTTP Request
-
-`DELETE http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
 
